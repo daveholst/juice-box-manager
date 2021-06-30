@@ -12,31 +12,26 @@ app.use(express.static(path.join(__dirname, 'public/')));
 require("dns").lookup(require("os").hostname(), function (err, add, fam) {
   console.log("addr: " + add);
 });
-/**********************websocket setup**************************************************************************************/
-//var expressWs = require('express-ws')(app,server);
-const WebSocket = require("ws");
-const s = new WebSocket.Server({ server });
-//when browser sends get request, send html file to browseapp.use(express.static(path.join(__dirname, 'public/')));
 
-// viewed at http://localhost:30000
-app.get("/", function (req, res) {
+
+const WebSocket = require("ws");
+const socketServer = new WebSocket.Server({ server });
+
+app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/index.html"));
 });
-//*************************************************************************************************************************
-//***************************ws chat server********************************************************************************
-//app.ws('/echo', function(ws, req) {
-s.on("connection", function (ws, req) {
+
+socketServer.on("connection", function (ws, req) {
   /******* when server receives messsage from client trigger function with argument message *****/
   ws.on("message", function (message) {
     console.log("Received: " + message);
-    s.clients.forEach(function (client) {
+    socketServer.clients.forEach(function (client) {
       //broadcast incoming message to all clients (s.clients)
       if (client != ws && client.readyState) {
         //except to the same client (ws) that sent this message
-        client.send("broadcast: " + message);
+        client.send(message);
       }
     });
-    // ws.send("From Server only to sender: "+ message); //send to client where message is from
   });
   ws.on("close", function () {
     console.log("lost one client");

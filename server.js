@@ -1,12 +1,14 @@
 const express = require("express"); //express framework to have a higher level of methods
 const app = express(); //assign app variable the express class/method
 var http = require("http");
+const server = http.createServer(app); //create a server
 var path = require("path");
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-const server = http.createServer(app); //create a server
+app.use(express.static(path.join(__dirname, 'public/')));
 //***************this snippet gets the local ip of the node.js server. copy this ip to the client side code and add ':3000' *****
 //****************exmpl. 192.168.56.1---> var sock =new WebSocket("ws://192.168.56.1:3000");*************************************
+
 require("dns").lookup(require("os").hostname(), function (err, add, fam) {
   console.log("addr: " + add);
 });
@@ -14,10 +16,11 @@ require("dns").lookup(require("os").hostname(), function (err, add, fam) {
 //var expressWs = require('express-ws')(app,server);
 const WebSocket = require("ws");
 const s = new WebSocket.Server({ server });
-//when browser sends get request, send html file to browser
+//when browser sends get request, send html file to browseapp.use(express.static(path.join(__dirname, 'public/')));
+
 // viewed at http://localhost:30000
 app.get("/", function (req, res) {
-  res.sendFile(path.join(__dirname + "/index.html"));
+  res.sendFile(path.join(__dirname + "/public/index.html"));
 });
 //*************************************************************************************************************************
 //***************************ws chat server********************************************************************************

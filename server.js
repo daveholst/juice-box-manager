@@ -21,10 +21,24 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname + "/public/index.html"));
 });
 
+let relay1On = false;
+
 socketServer.on("connection", function (ws, req) {
   /******* when server receives messsage from client trigger function with argument message *****/
   ws.on("message", function (message) {
     console.log("Received: " + message);
+    const messageObject = JSON.parse(message);
+    if (messageObject.device === "relay-1") {
+      if (messageObject.engaged) {
+        relay1On = true;
+        console.log("if",relay1On);
+      }
+      else {
+        relay1On = false;
+        console.log("else",relay1On);
+      }
+    }
+
     socketServer.clients.forEach(function (client) {
       //broadcast incoming message to all clients (s.clients)
       if (client != ws && client.readyState) {
@@ -38,5 +52,12 @@ socketServer.on("connection", function (ws, req) {
   });
   //ws.send("new client connected");
   console.log("new client connected");
+  // send out the status of devices?
+  if (relay1On === true) {
+    ws.send(`{"device":"relay-1","engaged":true}`)
+  } else {
+    ws.send(`{"device":"relay-1","engaged":false}`)
+
+  }
 });
 server.listen(3000);

@@ -8,14 +8,15 @@ window.addEventListener("load", function () { //when page loads
   relay1.addEventListener("change", function () { //add event listener for when checkbox changes
     myWebSocket.send(JSON.stringify({
       device: "relay-1",
-      action: this.checked ? "turn_on" : "turn_off"
+      engaged: this.checked ? true : false
     })); //send button status to server (as 1 or 0)
   });
 });
-myWebSocket.onmessage = function (event) { //get button status from client
-  const message = JSON.parse(event.data)
+myWebSocket.onmessage = function (event) {
+  message = JSON.parse(event.data)
   console.log(message);
-  document.getElementById("relay-1").checked = data; //change checkbox according to push button on Raspberry Pi
+
+  document.getElementById("relay-1").checked = message.engaged; //change checkbox according to push button on Raspberry Pi
   // socket.emit("relay-1", data); //send push button status to back to server
 };
 
@@ -24,16 +25,19 @@ myWebSocket.onmessage = function (event) { //get button status from client
 
 
 myWebSocket.onopen = (event) => {
-  myWebSocket.send("browser joined")
+  // ask for current status?
+  myWebSocket.send(JSON.stringify({
+    message: "browser joined"
+  }) )
 }
 
-const testButton = document.querySelector('#test-button');
+// const testButton = document.querySelector('#test-button');
 
-testButton.addEventListener('click', (e) => {
-  const message = {
-    action: "turn_on",
-    device: "relay_1"
-  }
-  console.log(message);
-  myWebSocket.send(JSON.stringify(message));
-})
+// testButton.addEventListener('click', (e) => {
+//   const message = {
+//     action: "turn_on",
+//     device: "relay_1"
+//   }
+//   console.log(message);
+//   myWebSocket.send(JSON.stringify(message));
+// })

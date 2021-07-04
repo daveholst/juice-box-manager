@@ -15,8 +15,8 @@ const mqttClient = mqtt.connect(process.env.MQTTSERVER, {
   password: process.env.MQTTPWD
 })
 
-mqttClient.on('connect', function () {
-  mqttClient.subscribe('juicebox1/#', function (err) {
+mqttClient.on('connect', () => {
+  mqttClient.subscribe('juicebox1/#', (err) => {
     if (!err) {
       mqttClient.publish('juicebox1', 'Server Online!')
     }
@@ -32,6 +32,7 @@ app.post('/api/relays', (req, res) => {
   console.log(req.body);
   const { topic, payload } = req.body;
   mqttClient.publish(`juicebox1/${topic}`, payload)
+  res.status(200).json(`juicebox1/${topic}, payload`)
 })
 
 

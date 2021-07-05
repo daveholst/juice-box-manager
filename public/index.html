@@ -4,12 +4,20 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"
+      integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
     <title>Document</title>
   </head>
   <body>
     <h1>Relay Test</h1>
-    <input id="relay-1" type="checkbox" />Relay 1
-    <button id="test-button">Test Message</button>
+    <button class="test-buttons" data-topic="relay1" data-payload="on">Relay 1 On</button>
+    <button class="test-buttons" data-topic="relay1" data-payload="off">Relay 1 Off</button>
+    <button class="test-buttons" data-topic="relay2" data-payload="on">Relay 2 On</button>
+    <button class="test-buttons" data-topic="relay2" data-payload="off">Relay 2 Off</button>
     <script src="./ws.js"></script>
   </body>
 </html>
